@@ -94,11 +94,6 @@ local function setNoClip(state)
 			part.CanCollide = not state
 		end
 	end
-
-	local humanoid = character:FindFirstChildOfClass("Humanoid")
-	if humanoid then
-		humanoid:ChangeState(state and Enum.HumanoidStateType.Physics or Enum.HumanoidStateType.GettingUp)
-	end
 end
 
 local function startFly()
