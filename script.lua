@@ -74,6 +74,7 @@ speedBar.BorderSizePixel = 0
 local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
+local PhysicsService = game:GetService("PhysicsService")
 
 local flying = false
 local flySpeed = 50
@@ -88,9 +89,18 @@ end
 local function setNoClip(state)
 	local character = player.Character
 	if not character then return end
+
+	local groupName = "NoClipGroup"
+	if not pcall(function() PhysicsService:CreateCollisionGroup(groupName) end) then end
+	pcall(function() PhysicsService:CollisionGroupSetCollidable(groupName, "Default", false) end)
+
 	for _, part in ipairs(character:GetDescendants()) do
 		if part:IsA("BasePart") and not part:IsDescendantOf(character:FindFirstChildOfClass("Accessory")) then
-			part.CanCollide = not state
+			if state then
+				PhysicsService:SetPartCollisionGroup(part, groupName)
+			else
+				PhysicsService:SetPartCollisionGroup(part, "Default")
+			end
 		end
 	end
 end
