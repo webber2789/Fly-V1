@@ -104,9 +104,8 @@ local function startFly()
 		bodyVel.MaxForce = Vector3.new(1e6, 1e6, 1e6)
 		bodyVel.Parent = rootPart
 	end
-	setNoClip(true)
+	setNoClip(true) -- Enable noclip immediately on flight start
 
-	-- Continuously check and apply noclip during flight
 	RunService:BindToRenderStep("FlyStep", Enum.RenderPriority.Input.Value, function()
 		local cam = workspace.CurrentCamera
 		local move = Vector3.zero
@@ -121,7 +120,7 @@ local function startFly()
 		else
 			bodyVel.Velocity = Vector3.zero
 		end
-		setNoClip(true) -- Ensure noclip is enabled every frame during flight
+		setNoClip(true) -- Ensure noclip remains enabled during flight
 	end)
 end
 
@@ -131,7 +130,7 @@ local function stopFly()
 		bodyVel:Destroy()
 		bodyVel = nil
 	end
-	setNoClip(false)
+	setNoClip(false) -- Restore collision when flight ends
 end
 
 local enabled = false
