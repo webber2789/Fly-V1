@@ -105,7 +105,9 @@ local function startFly()
 		bodyVel.Parent = rootPart
 	end
 	setNoClip(true)
-	RunService:BindToRenderStep("ServerFly", Enum.RenderPriority.Input.Value, function()
+
+	-- Continuously check and apply noclip during flight
+	RunService:BindToRenderStep("FlyStep", Enum.RenderPriority.Input.Value, function()
 		local cam = workspace.CurrentCamera
 		local move = Vector3.zero
 		if UIS:IsKeyDown(Enum.KeyCode.W) then move += cam.CFrame.LookVector end
@@ -119,11 +121,12 @@ local function startFly()
 		else
 			bodyVel.Velocity = Vector3.zero
 		end
+		setNoClip(true) -- Ensure noclip is enabled every frame during flight
 	end)
 end
 
 local function stopFly()
-	RunService:UnbindFromRenderStep("ServerFly")
+	RunService:UnbindFromRenderStep("FlyStep")
 	if bodyVel then
 		bodyVel:Destroy()
 		bodyVel = nil
