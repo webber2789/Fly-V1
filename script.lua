@@ -1,166 +1,56 @@
--- messy but works lol
-local plr = game.Players.LocalPlayer
-local gui = Instance.new("ScreenGui", plr:WaitForChild("PlayerGui"))
-gui.ResetOnSpawn = false
+local pl=game.Players.LocalPlayer
+local g=Instance.new("ScreenGui",pl:WaitForChild("PlayerGui"));g.ResetOnSpawn=false
 
--- main ui stuff
-local main = Instance.new("Frame", gui)
-main.Size = UDim2.new(0, 200, 0, 110)
-main.Position = UDim2.new(1, -10, 1, -10)
-main.AnchorPoint = Vector2.new(1, 1)
-main.BackgroundColor3 = Color3.fromHex("#28241c") -- dark theme ftw
-main.BorderSizePixel = 0
+local fr=Instance.new("Frame") fr.Parent=g fr.Size=UDim2.new(0,200,0,110) fr.Position=UDim2.new(1,-10,1,-10) fr.AnchorPoint=Vector2.new(1,1) fr.BackgroundColor3=Color3.fromRGB(40,36,28)
 
--- top bar looks kinda ugly but whatever
-local top = Instance.new("Frame", main)
-top.Size = UDim2.new(1, 0, 0, 25)
-top.BackgroundColor3 = Color3.fromHex("#ab1207")
-top.BorderSizePixel = 0
+local hd=Instance.new("Frame",fr) hd.Size=UDim2.new(1,0,0,25) hd.BackgroundColor3=Color3.fromRGB(171,18,7)
 
--- TODO: make this look better later
-local title = Instance.new("TextLabel", top)
-title.Size = UDim2.new(0, 60, 1, 0)
-title.Position = UDim2.new(0, 5, 0, 0)
-title.BackgroundTransparency = 1
-title.Text = "FLY"
-title.TextColor3 = Color3.new(1, 1, 1)
-title.Font = Enum.Font.SourceSansSemibold
-title.TextSize = 20
-title.TextXAlignment = Enum.TextXAlignment.Left
+local tx=Instance.new("TextLabel",hd) tx.Size=UDim2.new(0,60,1,0) tx.Position=UDim2.new(0,5,0,0) tx.Text="FLY" tx.Font=Enum.Font.SourceSans tx.TextSize=20 tx.TextXAlignment=Enum.TextXAlignment.Left tx.BackgroundTransparency=1 tx.TextColor3=Color3.new(1,1,1)
 
--- buttons
-local min = Instance.new("TextButton", top)
-min.Size = UDim2.new(0, 25, 0, 25)
-min.Position = UDim2.new(1, -50, 0, 0)
-min.BackgroundColor3 = Color3.fromHex("#780404")
-min.Text = "−"
-min.TextColor3 = Color3.new(1, 1, 1)
-min.Font = Enum.Font.SourceSans
-min.TextSize = 18
-min.BorderSizePixel = 0
+local bb2=Instance.new("TextButton",hd) bb2.Size=UDim2.new(0,25,0,25) bb2.Position=UDim2.new(1,-25,0,0) bb2.Text="X" bb2.BackgroundColor3=Color3.fromRGB(120,4,4) bb2.TextColor3=Color3.new(1,1,1) bb2.Font=Enum.Font.SourceSans bb2.TextSize=18 bb2.BorderSizePixel=0
 
-local close = Instance.new("TextButton", top)
-close.Size = UDim2.new(0, 25, 0, 25)
-close.Position = UDim2.new(1, -25, 0, 0)
-close.BackgroundColor3 = Color3.fromHex("#780404")
-close.Text = "X"
-close.TextColor3 = Color3.new(1, 1, 1)
-close.Font = Enum.Font.SourceSans
-close.TextSize = 18
-close.BorderSizePixel = 0
+local bb1=Instance.new("TextButton",hd) bb1.Position=UDim2.new(1,-50,0,0) bb1.Size=UDim2.new(0,25,0,25) bb1.Text="-" bb1.BackgroundColor3=Color3.fromRGB(120,4,4) bb1.TextColor3=Color3.new(1,1,1) bb1.Font=Enum.Font.SourceSans bb1.TextSize=18 bb1.BorderSizePixel=0
 
--- status stuff
-local status = Instance.new("TextLabel", main)
-status.Size = UDim2.new(0, 100, 0, 20)
-status.Position = UDim2.new(0.5, -80, 0, 30)
-status.BackgroundTransparency = 1
-status.Text = "Status:"
-status.TextColor3 = Color3.new(1, 1, 1)
-status.Font = Enum.Font.SourceSansSemibold
-status.TextSize = 20
-status.TextXAlignment = Enum.TextXAlignment.Left
+local lbl=Instance.new("TextLabel") lbl.Parent=fr lbl.Size=UDim2.new(0,100,0,20) lbl.Position=UDim2.new(0.5,-80,0,30) lbl.Text="Status:" lbl.TextColor3=Color3.new(1,1,1) lbl.TextSize=20 lbl.Font=Enum.Font.SourceSans lbl.BackgroundTransparency=1
 
-local toggle = Instance.new("TextButton", main)
-toggle.Size = UDim2.new(0, 160, 0, 30)
-toggle.Position = UDim2.new(0.5, -80, 0, 55)
-toggle.BackgroundColor3 = Color3.fromHex("#ab1207")
-toggle.Text = "DISABLED"
-toggle.TextColor3 = Color3.new(1, 1, 1)
-toggle.Font = Enum.Font.SourceSansBold
-toggle.TextSize = 22
-toggle.BorderSizePixel = 0
+local bt=Instance.new("TextButton") bt.Size=UDim2.new(0,160,0,30) bt.Parent=fr bt.Text="DISABLED" bt.Position=UDim2.new(0.5,-80,0,55) bt.BackgroundColor3=Color3.fromRGB(171,18,7) bt.TextColor3=Color3.new(1,1,1) bt.Font=Enum.Font.SourceSansBold bt.TextSize=22 bt.BorderSizePixel=0
 
--- speed bar (not implemented yet)
-local sbar = Instance.new("Frame", main)
-sbar.Size = UDim2.new(0, 160, 0, 10)
-sbar.Position = UDim2.new(0.5, -80, 0, 90)
-sbar.BackgroundColor3 = Color3.fromHex("#403434")
-sbar.BorderSizePixel = 0
+local u=game:GetService("UserInputService")
+local r=game:GetService("RunService")
+local fly=false local v=nil local rt=nil local e=false local spd=50
 
-local UIS = game:GetService("UserInputService")
-local RS = game:GetService("RunService")
-
--- flying logic
-local speed = 50  -- change this if too slow
-local flying, bv, root = false, nil, nil
-
--- handles the actual flying
-local function fly()
-    root = plr.Character.HumanoidRootPart
-    if not bv then
-        bv = Instance.new("BodyVelocity")
-        bv.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
-        bv.P = 9000  -- makes it smoother
-        bv.Parent = root
-    end
-    
-    -- noclip
-    for _,p in pairs(plr.Character:GetDescendants()) do
-        if p:IsA("BasePart") then p.CanCollide = false end
-    end
+bt.MouseButton1Click:Connect(function()
+e=not e fly=e
+bt.Text=e and"ENABLED"or"DISABLED"
+lbl.Text=e and"Status: On"or"Status: Off"
+if e then
+rt=pl.Character and pl.Character:FindFirstChild("HumanoidRootPart")if not rt then return end
+if not v then v=Instance.new("BodyVelocity")v.MaxForce=Vector3.new(9e9,9e9,9e9)v.P=9000 v.Parent=rt end
+for _,z in pairs(pl.Character:GetDescendants())do if z:IsA("BasePart")then z.CanCollide=false end end
+r:BindToRenderStep("fly",Enum.RenderPriority.Input.Value,function()
+local c=workspace.CurrentCamera local m=Vector3.zero
+if u:IsKeyDown(Enum.KeyCode.W)then m+=c.CFrame.LookVector end
+if u:IsKeyDown(Enum.KeyCode.S)then m-=c.CFrame.LookVector end
+if u:IsKeyDown(Enum.KeyCode.A)then m-=c.CFrame.RightVector end
+if u:IsKeyDown(Enum.KeyCode.D)then m+=c.CFrame.RightVector end
+if u:IsKeyDown(Enum.KeyCode.E)then m+=Vector3.new(0,1,0)end
+if u:IsKeyDown(Enum.KeyCode.Q)then m-=Vector3.new(0,1,0)end
+v.Velocity=m.Magnitude>0 and m.Unit*spd or Vector3.zero
+end)
+else
+r:UnbindFromRenderStep("fly")
+if v then v:Destroy()v=nil end
+if pl.Character then for _,z in pairs(pl.Character:GetDescendants())do if z:IsA("BasePart")then z.CanCollide=true end end end
 end
-
--- cleanup flying stuff
-local function stopfly()
-    RS:UnbindFromRenderStep("flyloop")
-    if bv then bv:Destroy() bv = nil end
-    
-    -- restore collisions
-    if plr.Character then
-        for _,p in pairs(plr.Character:GetDescendants()) do
-            if p:IsA("BasePart") then p.CanCollide = true end
-        end
-    end
-end
-
--- toggle functionality
-local enabled = false
-toggle.MouseButton1Click:Connect(function()
-    enabled = not enabled
-    toggle.Text = enabled and "ENABLED" or "DISABLED"
-    flying = enabled
-    
-    if flying then
-        fly()
-        status.RichText = true
-        status.Text = 'Status: <font color="rgb(0,255,0)">On</font>'
-        
-        -- fly loop
-        RS:BindToRenderStep("flyloop", Enum.RenderPriority.Input.Value, function()
-            local cam = workspace.CurrentCamera
-            local move = Vector3.new()
-            
-            -- movement keys
-            if UIS:IsKeyDown(Enum.KeyCode.W) then move = move + cam.CFrame.LookVector end
-            if UIS:IsKeyDown(Enum.KeyCode.S) then move = move - cam.CFrame.LookVector end
-            if UIS:IsKeyDown(Enum.KeyCode.A) then move = move - cam.CFrame.RightVector end
-            if UIS:IsKeyDown(Enum.KeyCode.D) then move = move + cam.CFrame.RightVector end
-            if UIS:IsKeyDown(Enum.KeyCode.E) then move = move + Vector3.new(0,1,0) end
-            if UIS:IsKeyDown(Enum.KeyCode.Q) then move = move - Vector3.new(0,1,0) end
-            
-            -- update velocity
-            if move.Magnitude > 0 then
-                bv.Velocity = move.Unit * speed
-            else
-                bv.Velocity = Vector3.zero
-            end
-        end)
-    else
-        stopfly()
-        status.RichText = true
-        status.Text = 'Status: <font color="rgb(255,0,0)">Off</font>'
-    end
 end)
 
--- ui buttons
-close.MouseButton1Click:Connect(function() gui:Destroy() end)
-min.MouseButton1Click:Connect(function() main.Visible = false end)
+bb2.MouseButton1Click:Connect(function()g:Destroy()end)
+bb1.MouseButton1Click:Connect(function()fr.Visible=false end)
 
--- handle respawn
-plr.CharacterAdded:Connect(function()
-    flying = false
-    stopfly()
-    status.Text = 'Status: <font color="rgb(255,0,0)">Off</font>'
-    toggle.Text = "DISABLED"
-    enabled = false
+pl.CharacterAdded:Connect(function()
+fly=false e=false
+r:UnbindFromRenderStep("fly")
+if v then v:Destroy()v=nil end
+bt.Text="DISABLED"
+lbl.Text="Status: Off"
 end)
