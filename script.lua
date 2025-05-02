@@ -1,56 +1,135 @@
-local pl=game.Players.LocalPlayer
-local g=Instance.new("ScreenGui",pl:WaitForChild("PlayerGui"));g.ResetOnSpawn=false
-
-local fr=Instance.new("Frame") fr.Parent=g fr.Size=UDim2.new(0,200,0,110) fr.Position=UDim2.new(1,-10,1,-10) fr.AnchorPoint=Vector2.new(1,1) fr.BackgroundColor3=Color3.fromRGB(40,36,28)
-
-local hd=Instance.new("Frame",fr) hd.Size=UDim2.new(1,0,0,25) hd.BackgroundColor3=Color3.fromRGB(171,18,7)
-
-local tx=Instance.new("TextLabel",hd) tx.Size=UDim2.new(0,60,1,0) tx.Position=UDim2.new(0,5,0,0) tx.Text="FLY" tx.Font=Enum.Font.SourceSans tx.TextSize=20 tx.TextXAlignment=Enum.TextXAlignment.Left tx.BackgroundTransparency=1 tx.TextColor3=Color3.new(1,1,1)
-
-local bb2=Instance.new("TextButton",hd) bb2.Size=UDim2.new(0,25,0,25) bb2.Position=UDim2.new(1,-25,0,0) bb2.Text="X" bb2.BackgroundColor3=Color3.fromRGB(120,4,4) bb2.TextColor3=Color3.new(1,1,1) bb2.Font=Enum.Font.SourceSans bb2.TextSize=18 bb2.BorderSizePixel=0
-
-local bb1=Instance.new("TextButton",hd) bb1.Position=UDim2.new(1,-50,0,0) bb1.Size=UDim2.new(0,25,0,25) bb1.Text="-" bb1.BackgroundColor3=Color3.fromRGB(120,4,4) bb1.TextColor3=Color3.new(1,1,1) bb1.Font=Enum.Font.SourceSans bb1.TextSize=18 bb1.BorderSizePixel=0
-
-local lbl=Instance.new("TextLabel") lbl.Parent=fr lbl.Size=UDim2.new(0,100,0,20) lbl.Position=UDim2.new(0.5,-80,0,30) lbl.Text="Status:" lbl.TextColor3=Color3.new(1,1,1) lbl.TextSize=20 lbl.Font=Enum.Font.SourceSans lbl.BackgroundTransparency=1
-
-local bt=Instance.new("TextButton") bt.Size=UDim2.new(0,160,0,30) bt.Parent=fr bt.Text="DISABLED" bt.Position=UDim2.new(0.5,-80,0,55) bt.BackgroundColor3=Color3.fromRGB(171,18,7) bt.TextColor3=Color3.new(1,1,1) bt.Font=Enum.Font.SourceSansBold bt.TextSize=22 bt.BorderSizePixel=0
-
-local u=game:GetService("UserInputService")
-local r=game:GetService("RunService")
-local fly=false local v=nil local rt=nil local e=false local spd=50
-
-bt.MouseButton1Click:Connect(function()
-e=not e fly=e
-bt.Text=e and"ENABLED"or"DISABLED"
-lbl.Text=e and"Status: On"or"Status: Off"
-if e then
-rt=pl.Character and pl.Character:FindFirstChild("HumanoidRootPart")if not rt then return end
-if not v then v=Instance.new("BodyVelocity")v.MaxForce=Vector3.new(9e9,9e9,9e9)v.P=9000 v.Parent=rt end
-for _,z in pairs(pl.Character:GetDescendants())do if z:IsA("BasePart")then z.CanCollide=false end end
-r:BindToRenderStep("fly",Enum.RenderPriority.Input.Value,function()
-local c=workspace.CurrentCamera local m=Vector3.zero
-if u:IsKeyDown(Enum.KeyCode.W)then m+=c.CFrame.LookVector end
-if u:IsKeyDown(Enum.KeyCode.S)then m-=c.CFrame.LookVector end
-if u:IsKeyDown(Enum.KeyCode.A)then m-=c.CFrame.RightVector end
-if u:IsKeyDown(Enum.KeyCode.D)then m+=c.CFrame.RightVector end
-if u:IsKeyDown(Enum.KeyCode.E)then m+=Vector3.new(0,1,0)end
-if u:IsKeyDown(Enum.KeyCode.Q)then m-=Vector3.new(0,1,0)end
-v.Velocity=m.Magnitude>0 and m.Unit*spd or Vector3.zero
-end)
+local player = game.Players.LocalPlayer
+local screenGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+screenGui.ResetOnSpawn = false
+local mainFrame = Instance.new("Frame", screenGui)
+mainFrame.Size = UDim2.new(0, 200, 0, 110)
+mainFrame.AnchorPoint = Vector2.new(1, 1)
+mainFrame.Position = UDim2.new(1, -10, 1, -10)
+mainFrame.BackgroundColor3 = Color3.fromHex("#28241c")
+mainFrame.BorderSizePixel = 0
+local topBar = Instance.new("Frame", mainFrame)
+topBar.Size = UDim2.new(1, 0, 0, 25)
+topBar.Position = UDim2.new(0, 0, 0, 0)
+topBar.BackgroundColor3 = Color3.fromHex("#ab1207")
+topBar.BorderSizePixel = 0
+local title = Instance.new("TextLabel", topBar)
+title.Size = UDim2.new(0, 60, 0, 25)
+title.Position = UDim2.new(0, 5, 0, 0)
+title.BackgroundTransparency = 1
+title.Text = "FLY"
+title.TextColor3 = Color3.new(1, 1, 1)
+title.Font = Enum.Font.SourceSansSemibold
+title.TextSize = 20
+title.TextXAlignment = Enum.TextXAlignment.Left
+local minBtn = Instance.new("TextButton", topBar)
+minBtn.Size = UDim2.new(0, 25, 0, 25)
+minBtn.Position = UDim2.new(1, -50, 0, 0)
+minBtn.BackgroundColor3 = Color3.fromHex("#780404")
+minBtn.Text = "−"
+minBtn.TextColor3 = Color3.new(1, 1, 1)
+minBtn.Font = Enum.Font.SourceSans
+minBtn.TextSize = 18
+minBtn.BorderSizePixel = 0
+local closeBtn = Instance.new("TextButton", topBar)
+closeBtn.Size = UDim2.new(0, 25, 0, 25)
+closeBtn.Position = UDim2.new(1, -25, 0, 0)
+closeBtn.BackgroundColor3 = Color3.fromHex("#780404")
+closeBtn.Text = "X"
+closeBtn.TextColor3 = Color3.new(1, 1, 1)
+closeBtn.Font = Enum.Font.SourceSans
+closeBtn.TextSize = 18
+closeBtn.BorderSizePixel = 0
+local statusLabel = Instance.new("TextLabel", mainFrame)
+statusLabel.Size = UDim2.new(0, 100, 0, 20)
+statusLabel.Position = UDim2.new(0.5, -80, 0, 30)
+statusLabel.BackgroundTransparency = 1
+statusLabel.Text = "Status:"
+statusLabel.TextColor3 = Color3.new(1, 1, 1)
+statusLabel.Font = Enum.Font.SourceSansSemibold
+statusLabel.TextSize = 20
+statusLabel.TextXAlignment = Enum.TextXAlignment.Left
+local toggleBtn = Instance.new("TextButton", mainFrame)
+toggleBtn.Size = UDim2.new(0, 160, 0, 30)
+toggleBtn.Position = UDim2.new(0.5, -80, 0, 55)
+toggleBtn.BackgroundColor3 = Color3.fromHex("#ab1207")
+toggleBtn.Text = "DISABLED"
+toggleBtn.TextColor3 = Color3.new(1, 1, 1)
+toggleBtn.Font = Enum.Font.SourceSansBold
+toggleBtn.TextSize = 22
+toggleBtn.BorderSizePixel = 0
+--probably wont add the speed bar
+local speedBar = Instance.new("Frame", mainFrame)
+speedBar.Size = UDim2.new(0, 160, 0, 10)
+speedBar.Position = UDim2.new(0.5, -80, 0, 90)
+speedBar.BackgroundColor3 = Color3.fromHex("#403434")
+speedBar.BorderSizePixel = 0
+local Players = game:GetService("Players")
+local UIS = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local flying = false
+local flySpeed = 50
+local bodyVel
+local rootPart = nil
+local function getRoot()
+local char = player.Character or player.CharacterAdded:Wait()
+return char:WaitForChild("HumanoidRootPart")
+end
+local function startFly()
+rootPart = getRoot()
+if not bodyVel then
+bodyVel = Instance.new("BodyVelocity")
+bodyVel.Velocity = Vector3.zero
+bodyVel.MaxForce = Vector3.new(1e6, 1e6, 1e6)
+bodyVel.Parent = rootPart
+end
+RunService:BindToRenderStep("ServerFly", Enum.RenderPriority.Input.Value, function()
+local cam = workspace.CurrentCamera
+local move = Vector3.zero
+if UIS:IsKeyDown(Enum.KeyCode.W) then move += cam.CFrame.LookVector end
+if UIS:IsKeyDown(Enum.KeyCode.S) then move -= cam.CFrame.LookVector end
+if UIS:IsKeyDown(Enum.KeyCode.A) then move -= cam.CFrame.RightVector end
+if UIS:IsKeyDown(Enum.KeyCode.D) then move += cam.CFrame.RightVector end
+if UIS:IsKeyDown(Enum.KeyCode.E) then move += Vector3.new(0, 1, 0) end
+if UIS:IsKeyDown(Enum.KeyCode.Q) then move -= Vector3.new(0, 1, 0) end
+if move.Magnitude > 0 then
+bodyVel.Velocity = move.Unit * flySpeed
 else
-r:UnbindFromRenderStep("fly")
-if v then v:Destroy()v=nil end
-if pl.Character then for _,z in pairs(pl.Character:GetDescendants())do if z:IsA("BasePart")then z.CanCollide=true end end end
+bodyVel.Velocity = Vector3.zero   
 end
 end)
-
-bb2.MouseButton1Click:Connect(function()g:Destroy()end)
-bb1.MouseButton1Click:Connect(function()fr.Visible=false end)
-
-pl.CharacterAdded:Connect(function()
-fly=false e=false
-r:UnbindFromRenderStep("fly")
-if v then v:Destroy()v=nil end
-bt.Text="DISABLED"
-lbl.Text="Status: Off"
+end
+local function stopFly()
+RunService:UnbindFromRenderStep("ServerFly")
+if bodyVel then
+bodyVel:Destroy()
+bodyVel = nil
+end
+end
+local enabled = false
+toggleBtn.MouseButton1Click:Connect(function()
+enabled = not enabled
+toggleBtn.Text = enabled and "ENABLED" or "DISABLED"
+flying = enabled
+if flying then
+startFly()
+statusLabel.RichText = true
+statusLabel.Text = 'Status: <font color="rgb(0,255,0)">On</font>'
+else
+stopFly()
+statusLabel.RichText = true
+statusLabel.Text = 'Status: <font color="rgb(255,0,0)">Off</font>'
+end
+end)
+closeBtn.MouseButton1Click:Connect(function()
+screenGui:Destroy()
+end)
+minBtn.MouseButton1Click:Connect(function()
+mainFrame.Visible = false
+end)
+player.CharacterAdded:Connect(function()
+flying = false
+stopFly()
+statusLabel.Text = 'Status: <font color="rgb(255,0,0)">Off</font>'
+toggleBtn.Text = "DISABLED"
+enabled = false
 end)
