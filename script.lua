@@ -85,17 +85,6 @@ local function getRoot()
 	return char:WaitForChild("HumanoidRootPart")
 end
 
-local function setNoClip(state)
-	local character = player.Character
-	if not character then return end
-
-	for _, part in ipairs(character:GetDescendants()) do
-		if part:IsA("BasePart") then
-			part.CanCollide = not state
-		end
-	end
-end
-
 local function startFly()
 	rootPart = getRoot()
 	if not bodyVel then
@@ -104,50 +93,49 @@ local function startFly()
 		bodyVel.MaxForce = Vector3.new(1e6, 1e6, 1e6)
 		bodyVel.Parent = rootPart
 	end
-	setNoClip(true)
 
-	RunService:BindToRenderStep("FlyStep", Enum.RenderPriority.Input.Value, function()
-		if UIS.TextInputObject then return end  -- Ignore movement if typing
-
+	RunService:BindToRenderStep("ServerFly", Enum.RenderPriority.Input.Value, function()
 		local cam = workspace.CurrentCamera
 		local move = Vector3.zero
+
 		if UIS:IsKeyDown(Enum.KeyCode.W) then move += cam.CFrame.LookVector end
 		if UIS:IsKeyDown(Enum.KeyCode.S) then move -= cam.CFrame.LookVector end
 		if UIS:IsKeyDown(Enum.KeyCode.A) then move -= cam.CFrame.RightVector end
 		if UIS:IsKeyDown(Enum.KeyCode.D) then move += cam.CFrame.RightVector end
 		if UIS:IsKeyDown(Enum.KeyCode.E) then move += Vector3.new(0, 1, 0) end
 		if UIS:IsKeyDown(Enum.KeyCode.Q) then move -= Vector3.new(0, 1, 0) end
+
 		if move.Magnitude > 0 then
 			bodyVel.Velocity = move.Unit * flySpeed
 		else
 			bodyVel.Velocity = Vector3.zero
 		end
-		setNoClip(true)
 	end)
 end
 
 local function stopFly()
-	RunService:UnbindFromRenderStep("FlyStep")
+	RunService:UnbindFromRenderStep("ServerFly")
 	if bodyVel then
 		bodyVel:Destroy()
 		bodyVel = nil
 	end
-	setNoClip(false)
 end
 
 local enabled = false
 toggleBtn.MouseButton1Click:Connect(function()
 	enabled = not enabled
 	toggleBtn.Text = enabled and "ENABLED" or "DISABLED"
+
 	flying = enabled
 	if flying then
 		startFly()
 		statusLabel.RichText = true
-		statusLabel.Text = 'Status: <font color="rgb(0,255,0)">On</font>'
+statusLabel.Text = 'Status: <font color="rgb(0,255,0)">On</font>'
+
 	else
 		stopFly()
-		statusLabel.RichText = true
-		statusLabel.Text = 'Status: <font color="rgb(255,0,0)">Off</font>'
+statusLabel.RichText = true
+statusLabel.Text = 'Status: <font color="rgb(255,0,0)">Off</font>'
 	end
 end)
 
@@ -158,7 +146,7 @@ end)
 minBtn.MouseButton1Click:Connect(function()
 	mainFrame.Visible = false
 end)
-
+ 
 player.CharacterAdded:Connect(function()
 	flying = false
 	stopFly()
